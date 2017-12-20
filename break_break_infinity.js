@@ -1006,9 +1006,8 @@
 		}
 		
 		log10() {
-			//UN-SAFETY: Returns a Number, not something with arbitrary precision, so expect inaccuracies if abs(exponent) is greater than 9e15. 
-		
-			return parseInt(this.exponent.toString()) + Math.log10(this.mantissa);
+            if (this.m > 3.162277) return this.e.add(1)
+			return this.e
 		}
 		
 		static log10(value) {
@@ -1019,10 +1018,8 @@
 		
 		log(base) {
 			//UN-SAFETY: Most incremental game cases are log(number := 1 or greater, base := 2 or greater). We assume this to be true and thus only need to return a number, not a Decimal, and don't do any other kind of error checking.
-			
-			//UN-SAFETY: Returns a Number, not something with arbitrary precision, so expect inaccuracies if abs(exponent) is greater than 9e15. 
-			
-			return (Math.LN10/Math.log(base))*this.log10();
+
+			return this.log10().multiply((Math.LN10/Math.log(base)*1e10).round()).divide(10000000000);
 		}
 		
 		static log(value, base) {
@@ -1031,10 +1028,8 @@
 			return value.log(base);
 		}
 		
-		log2() {
-			//UN-SAFETY: Returns a Number, not something with arbitrary precision, so expect inaccuracies if abs(exponent) is greater than 9e15.
-		
-			return 3.32192809488736234787*this.log10();
+		log2() {		
+			return this.log10().multiply(332192809488736).divide(1000000000000000);
 		}
 		
 		static log2(value) {
@@ -1044,9 +1039,7 @@
 		}
 		
 		ln() {
-			//UN-SAFETY: Returns a Number, not something with arbitrary precision, so expect inaccuracies if abs(exponent) is greater than 9e15.
-			
-			return 2.30258509299404568402*this.log10();
+            return this.log10().multiply(230258509299404).divide(1000000000000000);
 		}
 		
 		static ln(value) {
@@ -1066,6 +1059,7 @@
 		}
 		
 		pow(value) {
+            //doesnt support value > 1e308 because that takes effort
 			var bigintegervalue = null;
 			if (value instanceof Decimal) { value = value.toNumber(); }
 			if (value instanceof BigIntegerInternal) { bigintegervalue = value; value = parseInt(value.toString()); }
@@ -1092,7 +1086,7 @@
 				}
 			}
 			
-			return Decimal.exp(value*this.ln());
+			return Decimal.fromMantissaExponent(1,this.log10().multiply((value*1e10).round()).divide(10000000000));
 		}
 		
 		pow_base(value) {
@@ -1103,7 +1097,9 @@
 		
 		static pow(value, other) {
 			//Fast track: 10^integer
-			if (value == 10 && Number.isInteger(other)) { return Decimal.fromMantissaExponent(1, other); }
+			if (value == 10 && Number.isInteger(other)) { 
+                return Decimal.fromMantissaExponent(1, other);
+            }
 			
 			value = Decimal.fromValue(value);
 			
@@ -1111,53 +1107,7 @@
 		}
 		
 		exp() {
-			//Fast track: if -706 < this < 709, we can use regular exp.
-			var tmp = this.toNumber();
-			if (-706 < tmp && tmp < 709)
-			{
-				return Decimal.fromNumber(Math.exp(tmp));
-			}
-			else
-			{
-				//This has to be implemented fundamentally, so that pow(value) can be implemented on top of it.
-				
-				// Implementation from SpeedCrunch: https://bitbucket.org/heldercorreia/speedcrunch/src/9cffa7b674890affcb877bfebc81d39c26b20dcc/src/math/floatexp.c?at=master&fileviewer=file-view-default
-				
-				var x, exp, expx;
-				
-				ExpHelper.precision = MAX_SIGNIFICANT_DIGITS + parseInt(this.exponent.toString());
-				x = new ExpHelper(this.toNumber());
-				exp = 0;
-				expx = parseInt(this.exponent.toString());
-				
-				if (expx >= 0)
-				{
-					exp = x.div(ExpHelper.LN10).trunc();
-					tmp = exp.mul(ExpHelper.LN10);
-					x = x.sub(tmp).toNumber();
-					if (x >= Math.LN10)
-					{
-						exp = exp.add(1);
-						x = x - Math.LN10;
-					}
-				}
-				if (x < 0)
-				{
-					exp = exp.sub(1);
-					x = x + Math.LN10;
-				}
-				
-				//when we get here 0 <= x < ln 10
-				x = Math.exp(x);
-				
-				if (!exp.eq(0))
-				{
-					expx = Decimal.toBigInteger(exp.floor().toFixed()); //TODO: or round, or even nothing? can it ever be non-integer?
-					x = Decimal.fromMantissaExponent(x, expx);
-				}
-				
-				return x;
-			}
+			return this.pow(Math.E);
 		}
 		
 		static exp(value) {
