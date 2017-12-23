@@ -6,27 +6,21 @@
 
 //END big integer
 
-//START decimal.js repurposed into ExpHelper ( https://github.com/MikeMcl/decimal.js/ )
-
-!function(n){"use strict";function r(n){var r,t,e,i=n.length-1,o="",s=n[0];if(i>0){for(o+=s,r=1;i>r;r++)e=n[r]+"",t=Z-e.length,t&&(o+=u(t)),o+=e;s=n[r],e=s+"",t=Z-e.length,t&&(o+=u(t))}else if(0===s)return"0";for(;s%10===0;)s/=10;return o+s}function t(n,r,t){if(n!==~~n||r>n||n>t)throw Error(T+n)}function e(n,r,t,e){var i,o,s,u,f,c,h,d,l,a=n.constructor;n:if(null!=r){if(d=n.d,!d)return n;for(i=1,u=d[0];u>=10;u/=10)i++;if(o=r-i,0>o)o+=Z,s=r,h=d[l=0],f=h/C(10,i-s-1)%10|0;else if(l=Math.ceil((o+1)/Z),u=d.length,l>=u){if(!e)break n;for(;u++<=l;)d.push(0);h=f=0,i=1,o%=Z,s=o-Z+1}else{for(h=u=d[l],i=1;u>=10;u/=10)i++;o%=Z,s=o-Z+i,f=0>s?0:h/C(10,i-s-1)%10|0}if(e=e||0>r||void 0!==d[l+1]||(0>s?h:h%C(10,i-s-1)),c=4>t?(f||e)&&(0==t||t==(n.s<0?3:2)):f>5||5==f&&(4==t||e||6==t&&(o>0?s>0?h/C(10,i-s):0:d[l-1])%10&1||t==(n.s<0?8:7)),1>r||!d[0])return d.length=0,c?(r-=n.e+1,d[0]=C(10,(Z-r%Z)%Z),n.e=-r||0):d[0]=n.e=0,n;if(0==o?(d.length=l,u=1,l--):(d.length=l+1,u=C(10,Z-o),d[l]=s>0?(h/C(10,i-s)%C(10,s)|0)*u:0),c)for(;;){if(0==l){for(o=1,s=d[0];s>=10;s/=10)o++;for(s=d[0]+=u,u=1;s>=10;s/=10)u++;o!=u&&(n.e++,d[0]==S&&(d[0]=1));break}if(d[l]+=u,d[l]!=S)break;d[l--]=0,u=1}for(o=d.length;0===d[--o];)d.pop()}return F&&(n.e>a.maxE?(n.d=null,n.e=NaN):n.e<a.minE&&(n.e=0,n.d=[0])),n}function i(n,t,e){if(!n.isFinite())return c(n);var i,o=n.e,s=r(n.d),f=s.length;return t?(e&&(i=e-f)>0?s=s.charAt(0)+"."+s.slice(1)+u(i):f>1&&(s=s.charAt(0)+"."+s.slice(1)),s=s+(n.e<0?"e":"e+")+n.e):0>o?(s="0."+u(-o-1)+s,e&&(i=e-f)>0&&(s+=u(i))):o>=f?(s+=u(o+1-f),e&&(i=e-o-1)>0&&(s=s+"."+u(i))):((i=o+1)<f&&(s=s.slice(0,i)+"."+s.slice(i)),e&&(i=e-f)>0&&(o+1===f&&(s+="."),s+=u(i))),s}function o(n,r){var t=n[0];for(r*=Z;t>=10;t/=10)r++;return r}function s(n){var r=n.length-1,t=r*Z+1;if(r=n[r]){for(;r%10==0;r/=10)t--;for(r=n[0];r>=10;r/=10)t++}return t}function u(n){for(var r="";n--;)r+="0";return r}function f(n,r,t){for(var e,i=new n(r[0]),o=0;++o<r.length;){if(e=new n(r[o]),!e.s){i=e;break}i[t](e)&&(i=e)}return i}function c(n){return String(n.s*n.s/0)}function h(n,r){var t,e,i;for((t=r.indexOf("."))>-1&&(r=r.replace(".","")),(e=r.search(/e/i))>0?(0>t&&(t=e),t+=+r.slice(e+1),r=r.substring(0,e)):0>t&&(t=r.length),e=0;48===r.charCodeAt(e);e++);for(i=r.length;48===r.charCodeAt(i-1);--i);if(r=r.slice(e,i)){if(i-=e,n.e=t=t-e-1,n.d=[],e=(t+1)%Z,0>t&&(e+=Z),i>e){for(e&&n.d.push(+r.slice(0,e)),i-=Z;i>e;)n.d.push(+r.slice(e,e+=Z));r=r.slice(e),e=Z-r.length}else e-=i;for(;e--;)r+="0";n.d.push(+r),F&&(n.e>n.constructor.maxE?(n.d=null,n.e=NaN):n.e<n.constructor.minE&&(n.e=0,n.d=[0]))}else n.e=0,n.d=[0];return n}function d(n,r){if("Infinity"===r||"NaN"===r)return+r||(n.s=NaN),n.e=NaN,n.d=null,n;throw Error(T+r)}function l(n){return new this(n).abs()}function a(n,r){return new this(n).plus(r)}function g(n){return e(n=new this(n),n.e+1,2)}function v(n){if(!n||"object"!=typeof n)throw Error(I+"Object expected");var r,t,e,i=["precision",1,U,"rounding",0,8,"toExpNeg",-R,0,"toExpPos",0,R,"maxE",0,R,"minE",-R,0,"modulo",0,9];for(r=0;r<i.length;r+=3)if(void 0!==(e=n[t=i[r]])){if(!(k(e)===e&&e>=i[r+1]&&e<=i[r+2]))throw Error(T+t+": "+e);this[t]=e}if(void 0!==(e=n[t="crypto"])){if(e!==!0&&e!==!1&&0!==e&&1!==e)throw Error(T+t+": "+e);if(e){if("undefined"==typeof crypto||!crypto||!crypto.getRandomValues&&!crypto.randomBytes)throw Error(H);this[t]=!0}else this[t]=!1}return this}function p(n){function r(n){var t,e,i,o=this;if(!(o instanceof r))return new r(n);if(o.constructor=r,n instanceof r)return o.s=n.s,o.e=n.e,void(o.d=(n=n.d)?n.slice():n);if(i=typeof n,"number"===i){if(0===n)return o.s=0>1/n?-1:1,o.e=0,void(o.d=[0]);if(0>n?(n=-n,o.s=-1):o.s=1,n===~~n&&1e7>n){for(t=0,e=n;e>=10;e/=10)t++;return o.e=t,void(o.d=[n])}return 0*n!==0?(n||(o.s=NaN),o.e=NaN,void(o.d=null)):h(o,n.toString())}if("string"!==i)throw Error(T+n);return 45===n.charCodeAt(0)?(n=n.slice(1),o.s=-1):o.s=1,M.test(n)?h(o,n):d(o,n)}var t,e,i;if(r.prototype=q,r.ROUND_UP=0,r.ROUND_DOWN=1,r.ROUND_CEIL=2,r.ROUND_FLOOR=3,r.ROUND_HALF_UP=4,r.ROUND_HALF_DOWN=5,r.ROUND_HALF_EVEN=6,r.ROUND_HALF_CEIL=7,r.ROUND_HALF_FLOOR=8,r.EUCLID=9,r.config=r.set=v,r.clone=p,r.abs=l,r.add=a,r.ceil=g,r.div=N,r.floor=w,r.max=m,r.min=E,r.mod=x,r.mul=O,r.round=b,r.sign=y,r.sub=D,r.trunc=P,void 0===n&&(n={}),n)for(i=["precision","rounding","toExpNeg","toExpPos","maxE","minE","modulo","crypto"],t=0;t<i.length;)n.hasOwnProperty(e=i[t++])||(n[e]=this[e]);return r.config(n),r}function N(n,r){return new this(n).div(r)}function w(n){return e(n=new this(n),n.e+1,3)}function m(){return f(this,arguments,"lt")}function E(){return f(this,arguments,"gt")}function x(n,r){return new this(n).mod(r)}function O(n,r){return new this(n).mul(r)}function b(n){return e(n=new this(n),n.e+1,this.rounding)}function y(n){return n=new this(n),n.d?n.d[0]?n.s:0*n.s:n.s||NaN}function D(n,r){return new this(n).sub(r)}function P(n){return e(n=new this(n),n.e+1,1)}var _,R=9e15,U=1e9,L="2.3025850929940456840179914546843642076011014886287729760333279009675726096773524802359972050895982983419677840422862486334095254650828067566662873690987816894829072083255546808437998948262331985283935053089653777326288461633662222876982198867465436674744042432743651550489343149393914796194044002221051017141748003688084012647080685567743216228355220114804663715659121373450747856947683463616792101806445070648000277502684916746550586856935673420670581136429224554405758925724208241314695689016758940256776311356919292033376587141660230105703089634572075440370847469940168269282808481184289314848524948644871927809676271275775397027668605952496716674183485704422507197965004714951050492214776567636938662976979522110718264549734772662425709429322582798502585509785265383207606726317164309505995087807523710333101197857547331541421808427543863591778117054309827482385045648019095610299291824318237525357709750539565187697510374970888692180205189339507238539205144634197265287286965110862571492198849978748873771345686209167058",A={precision:20,rounding:4,modulo:1,toExpNeg:-7,toExpPos:21,minE:-R,maxE:R,crypto:!1},F=!0,I="[DecimalError] ",T=I+"Invalid argument: ",H=I+"crypto unavailable",k=Math.floor,C=Math.pow,M=/^(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,S=1e7,Z=7,q=(L.length-1,{});q.absoluteValue=q.abs=function(){var n=new this.constructor(this);return n.s<0&&(n.s=1),e(n)},q.ceil=function(){return e(new this.constructor(this),this.e+1,2)},q.comparedTo=q.cmp=function(n){var r,t,e,i,o=this,s=o.d,u=(n=new o.constructor(n)).d,f=o.s,c=n.s;if(!s||!u)return f&&c?f!==c?f:s===u?0:!s^0>f?1:-1:NaN;if(!s[0]||!u[0])return s[0]?f:u[0]?-c:0;if(f!==c)return f;if(o.e!==n.e)return o.e>n.e^0>f?1:-1;for(e=s.length,i=u.length,r=0,t=i>e?e:i;t>r;++r)if(s[r]!==u[r])return s[r]>u[r]^0>f?1:-1;return e===i?0:e>i^0>f?1:-1},q.decimalPlaces=q.dp=function(){var n,r=this.d,t=NaN;if(r){if(n=r.length-1,t=(n-k(this.e/Z))*Z,n=r[n])for(;n%10==0;n/=10)t--;0>t&&(t=0)}return t},q.dividedBy=q.div=function(n){return B(this,new this.constructor(n))},q.dividedToIntegerBy=q.divToInt=function(n){var r=this,t=r.constructor;return e(B(r,new t(n),0,1,1),t.precision,t.rounding)},q.equals=q.eq=function(n){return 0===this.cmp(n)},q.floor=function(){return e(new this.constructor(this),this.e+1,3)},q.greaterThan=q.gt=function(n){return this.cmp(n)>0},q.greaterThanOrEqualTo=q.gte=function(n){var r=this.cmp(n);return 1==r||0===r},q.isFinite=function(){return!!this.d},q.isInteger=q.isInt=function(){return!!this.d&&k(this.e/Z)>this.d.length-2},q.isNaN=function(){return!this.s},q.isNegative=q.isNeg=function(){return this.s<0},q.isPositive=q.isPos=function(){return this.s>0},q.isZero=function(){return!!this.d&&0===this.d[0]},q.lessThan=q.lt=function(n){return this.cmp(n)<0},q.lessThanOrEqualTo=q.lte=function(n){return this.cmp(n)<1},q.minus=q.sub=function(n){var r,t,i,s,u,f,c,h,d,l,a,g,v=this,p=v.constructor;if(n=new p(n),!v.d||!n.d)return v.s&&n.s?v.d?n.s=-n.s:n=new p(n.d||v.s!==n.s?v:NaN):n=new p(NaN),n;if(v.s!=n.s)return n.s=-n.s,v.plus(n);if(d=v.d,g=n.d,c=p.precision,h=p.rounding,!d[0]||!g[0]){if(g[0])n.s=-n.s;else{if(!d[0])return new p(3===h?-0:0);n=new p(v)}return F?e(n,c,h):n}if(t=k(n.e/Z),l=k(v.e/Z),d=d.slice(),u=l-t){for(a=0>u,a?(r=d,u=-u,f=g.length):(r=g,t=l,f=d.length),i=Math.max(Math.ceil(c/Z),f)+2,u>i&&(u=i,r.length=1),r.reverse(),i=u;i--;)r.push(0);r.reverse()}else{for(i=d.length,f=g.length,a=f>i,a&&(f=i),i=0;f>i;i++)if(d[i]!=g[i]){a=d[i]<g[i];break}u=0}for(a&&(r=d,d=g,g=r,n.s=-n.s),f=d.length,i=g.length-f;i>0;--i)d[f++]=0;for(i=g.length;i>u;){if(d[--i]<g[i]){for(s=i;s&&0===d[--s];)d[s]=S-1;--d[s],d[i]+=S}d[i]-=g[i]}for(;0===d[--f];)d.pop();for(;0===d[0];d.shift())--t;return d[0]?(n.d=d,n.e=o(d,t),F?e(n,c,h):n):new p(3===h?-0:0)},q.modulo=q.mod=function(n){var r,t=this,i=t.constructor;return n=new i(n),!t.d||!n.s||n.d&&!n.d[0]?new i(NaN):!n.d||t.d&&!t.d[0]?e(new i(t),i.precision,i.rounding):(F=!1,9==i.modulo?(r=B(t,n.abs(),0,3,1),r.s*=n.s):r=B(t,n,0,i.modulo,1),r=r.times(n),F=!0,t.minus(r))},q.negated=q.neg=function(){var n=new this.constructor(this);return n.s=-n.s,e(n)},q.plus=q.add=function(n){var r,t,i,s,u,f,c,h,d,l,a=this,g=a.constructor;if(n=new g(n),!a.d||!n.d)return a.s&&n.s?a.d||(n=new g(n.d||a.s===n.s?a:NaN)):n=new g(NaN),n;if(a.s!=n.s)return n.s=-n.s,a.minus(n);if(d=a.d,l=n.d,c=g.precision,h=g.rounding,!d[0]||!l[0])return l[0]||(n=new g(a)),F?e(n,c,h):n;if(u=k(a.e/Z),i=k(n.e/Z),d=d.slice(),s=u-i){for(0>s?(t=d,s=-s,f=l.length):(t=l,i=u,f=d.length),u=Math.ceil(c/Z),f=u>f?u+1:f+1,s>f&&(s=f,t.length=1),t.reverse();s--;)t.push(0);t.reverse()}for(f=d.length,s=l.length,0>f-s&&(s=f,t=l,l=d,d=t),r=0;s;)r=(d[--s]=d[s]+l[s]+r)/S|0,d[s]%=S;for(r&&(d.unshift(r),++i),f=d.length;0==d[--f];)d.pop();return n.d=d,n.e=o(d,i),F?e(n,c,h):n},q.precision=q.sd=function(n){var r,t=this;if(void 0!==n&&n!==!!n&&1!==n&&0!==n)throw Error(T+n);return t.d?(r=s(t.d),n&&t.e+1>r&&(r=t.e+1)):r=NaN,r},q.round=function(){var n=this,r=n.constructor;return e(new r(n),n.e+1,r.rounding)},q.times=q.mul=function(n){var r,t,i,s,u,f,c,h,d,l=this,a=l.constructor,g=l.d,v=(n=new a(n)).d;if(n.s*=l.s,!(g&&g[0]&&v&&v[0]))return new a(!n.s||g&&!g[0]&&!v||v&&!v[0]&&!g?NaN:g&&v?0*n.s:n.s/0);for(t=k(l.e/Z)+k(n.e/Z),h=g.length,d=v.length,d>h&&(u=g,g=v,v=u,f=h,h=d,d=f),u=[],f=h+d,i=f;i--;)u.push(0);for(i=d;--i>=0;){for(r=0,s=h+i;s>i;)c=u[s]+v[i]*g[s-i-1]+r,u[s--]=c%S|0,r=c/S|0;u[s]=(u[s]+r)%S|0}for(;!u[--f];)u.pop();return r?++t:u.shift(),n.d=u,n.e=o(u,t),F?e(n,a.precision,a.rounding):n},q.toDecimalPlaces=q.toDP=function(n,r){var i=this,o=i.constructor;return i=new o(i),void 0===n?i:(t(n,0,U),void 0===r?r=o.rounding:t(r,0,8),e(i,n+i.e+1,r))},q.toExponential=function(n,r){var o,s=this,u=s.constructor;return void 0===n?o=i(s,!0):(t(n,0,U),void 0===r?r=u.rounding:t(r,0,8),s=e(new u(s),n+1,r),o=i(s,!0,n+1)),s.isNeg()&&!s.isZero()?"-"+o:o},q.toFixed=function(n,r){var o,s,u=this,f=u.constructor;return void 0===n?o=i(u):(t(n,0,U),void 0===r?r=f.rounding:t(r,0,8),s=e(new f(u),n+u.e+1,r),o=i(s,!1,n+s.e+1)),u.isNeg()&&!u.isZero()?"-"+o:o},q.toNearest=function(n,r){var i=this,o=i.constructor;if(i=new o(i),null==n){if(!i.d)return i;n=new o(1),r=o.rounding}else{if(n=new o(n),void 0!==r&&t(r,0,8),!i.d)return n.s?i:n;if(!n.d)return n.s&&(n.s=i.s),n}return n.d[0]?(F=!1,4>r&&(r=[4,5,7,8][r]),i=B(i,n,0,r,1).times(n),F=!0,e(i)):(n.s=i.s,i=n),i},q.toNumber=function(){return+this},q.toPrecision=function(n,r){var o,s=this,u=s.constructor;return void 0===n?o=i(s,s.e<=u.toExpNeg||s.e>=u.toExpPos):(t(n,1,U),void 0===r?r=u.rounding:t(r,0,8),s=e(new u(s),n,r),o=i(s,n<=s.e||s.e<=u.toExpNeg,n)),s.isNeg()&&!s.isZero()?"-"+o:o},q.toSignificantDigits=q.toSD=function(n,r){var i=this,o=i.constructor;return void 0===n?(n=o.precision,r=o.rounding):(t(n,1,U),void 0===r?r=o.rounding:t(r,0,8)),e(new o(i),n,r)},q.toString=function(){var n=this,r=n.constructor,t=i(n,n.e<=r.toExpNeg||n.e>=r.toExpPos);return n.isNeg()&&!n.isZero()?"-"+t:t},q.truncated=q.trunc=function(){return e(new this.constructor(this),this.e+1,1)},q.valueOf=q.toJSON=function(){var n=this,r=n.constructor,t=i(n,n.e<=r.toExpNeg||n.e>=r.toExpPos);return n.isNeg()?"-"+t:t};var B=function(){function n(n,r,t){var e,i=0,o=n.length;for(n=n.slice();o--;)e=n[o]*r+i,n[o]=e%t|0,i=e/t|0;return i&&n.unshift(i),n}function r(n,r,t,e){var i,o;if(t!=e)o=t>e?1:-1;else for(i=o=0;t>i;i++)if(n[i]!=r[i]){o=n[i]>r[i]?1:-1;break}return o}function t(n,r,t,e){for(var i=0;t--;)n[t]-=i,i=n[t]<r[t]?1:0,n[t]=i*e+n[t]-r[t];for(;!n[0]&&n.length>1;)n.shift()}return function(i,o,s,u,f,c){var h,d,l,a,g,v,p,N,w,m,E,x,O,b,y,D,P,R,U,L,A=i.constructor,F=i.s==o.s?1:-1,I=i.d,T=o.d;if(!(I&&I[0]&&T&&T[0]))return new A(i.s&&o.s&&(I?!T||I[0]!=T[0]:T)?I&&0==I[0]||!T?0*F:F/0:NaN);for(c?(g=1,d=i.e-o.e):(c=S,g=Z,d=k(i.e/g)-k(o.e/g)),U=T.length,P=I.length,w=new A(F),m=w.d=[],l=0;T[l]==(I[l]||0);l++);if(T[l]>(I[l]||0)&&d--,null==s?(b=s=A.precision,u=A.rounding):b=f?s+(i.e-o.e)+1:s,0>b)m.push(1),v=!0;else{if(b=b/g+2|0,l=0,1==U){for(a=0,T=T[0],b++;(P>l||a)&&b--;l++)y=a*c+(I[l]||0),m[l]=y/T|0,a=y%T|0;v=a||P>l}else{for(a=c/(T[0]+1)|0,a>1&&(T=n(T,a,c),I=n(I,a,c),U=T.length,P=I.length),D=U,E=I.slice(0,U),x=E.length;U>x;)E[x++]=0;L=T.slice(),L.unshift(0),R=T[0],T[1]>=c/2&&++R;do a=0,h=r(T,E,U,x),0>h?(O=E[0],U!=x&&(O=O*c+(E[1]||0)),a=O/R|0,a>1?(a>=c&&(a=c-1),p=n(T,a,c),N=p.length,x=E.length,h=r(p,E,N,x),1==h&&(a--,t(p,N>U?L:T,N,c))):(0==a&&(h=a=1),p=T.slice()),N=p.length,x>N&&p.unshift(0),t(E,p,x,c),-1==h&&(x=E.length,h=r(T,E,U,x),1>h&&(a++,t(E,x>U?L:T,x,c))),x=E.length):0===h&&(a++,E=[0]),m[l++]=a,h&&E[0]?E[x++]=I[D]||0:(E=[I[D]],x=1);while((D++<P||void 0!==E[0])&&b--);v=void 0!==E[0]}m[0]||m.shift()}if(1==g)w.e=d,_=v;else{for(l=1,a=m[0];a>=10;a/=10)l++;w.e=l+d*g-1,e(w,f?s+w.e+1:s,u,v)}return w}}();A=p(A),A["default"]=A.ExpHelper=A,L=new A(L),A.LN10=L,n.ExpHelper=A}(this);
-
-//END decimal.js repurposed into ExpHelper
-	
 ;(function (globalScope) {
 	'use strict';
 	
 	/*
 	
-	# break_break_infinity.js
+	# break^3_infinity.js
 	A replacement for decimal.js for incremental games who want to deal with very large numbers (bigger in magnitude than 1.78e308, up to as much as 1e(1.79e308) ) and want to prioritize speed over accuracy.
 	If you want to prioritize accuracy over speed, please use decimal.js instead.
-	If you only need to handle numbers as big as 1e(9e15), use break_infinity.js instead.
+	If you only need to handle numbers as big as e(1e308), use break_break_infinity.js instead.
 	
 	https://github.com/Patashu/break_infinity.js
 	
 	This library is open source and free to use/modify/fork for any purpose you want.
 	
-	By Patashu.
+	Taken from break_break_infinity.js from Patashu. By slabdrill.
 	
 	---
 	
@@ -1016,6 +1010,7 @@
 			return value.log10();
 		}
 		
+		
 		log(base) {
 			//UN-SAFETY: Most incremental game cases are log(number := 1 or greater, base := 2 or greater). We assume this to be true and thus only need to return a number, not a Decimal, and don't do any other kind of error checking.
 
@@ -1058,35 +1053,29 @@
 			return value.logarithm(base);
 		}
 		
-		pow(value) {
-            //doesnt support value > 1e308 because that takes effort
-			var bigintegervalue = null;
-			if (value instanceof Decimal) { value = value.toNumber(); }
-			if (value instanceof BigIntegerInternal) { bigintegervalue = value; value = parseInt(value.toString()); }
-			if (typeof(value) == 'string')
-			{
-				if (value.indexOf(".") == -1 && value.indexOf("e") == -1)
-				{
-					bigintegervalue = BigInteger.parseInt(value);
-				}
-				value = parseFloat(value);
-			}
-			
-			//Fast track: If value is an integer and mantissa^value fits in a Number, we can do a very fast method.
+		static log10small(value) {
+			//only really for numbers in break_infinity range, and exists solely for use internally
+			value = Decimal.fromValue(value);
+			return parseInt(value.exponent.toString()) + Math.log10(value.mantissa);
+		}
+		
+		static pow10(value) {
 			if (Number.isInteger(value))
 			{
-				var newMantissa = Math.pow(this.mantissa, value);
-				if (Number.isFinite(newMantissa))
-				{
-					if (bigintegervalue != null)
-					{
-						return Decimal.fromMantissaExponent(newMantissa, this.exponent.multiply(bigintegervalue));
-					}
-					return Decimal.fromMantissaExponent(newMantissa, this.exponent.multiply(Decimal.toBigInteger(value)));
-				}
+				return Decimal.fromMantissaExponent_noNormalize(1,value);
 			}
+			return Decimal.fromMantissaExponent(Math.pow(10,value%1),Math.trunc(value));
+		}	
+		pow(value) {
+			//sacrificing massive amounts of precision lol
+			if (this.e.cmp(1e15) == 1 || value*this.log10small() == Number.POSITIVE_INFINITY) {
+				if (value instanceof BigIntegerInternal) return Decimal.fromMantissaExponent(1,this.log10().multiply(value.multiply(1e10).add(5e9)).divide(1e10));
+				value = Decimal.fromValue(value)
+				return Decimal.fromMantissaExponent(1,this.log10().multiply(value.times(1e10).round()).divide(1e10));
+			}
+			value = Decimal.fromValue(value)
+			return Decimal.pow10(value*this.log10small())
 			
-			return Decimal.fromMantissaExponent(1,this.log10().multiply((value*1e10).round()).divide(10000000000));
 		}
 		
 		pow_base(value) {
