@@ -1053,7 +1053,7 @@
 			return value.logarithm(base);
 		}
 		
-		static log10small(value) {
+		log10small(value) {
 			//only really for numbers in break_infinity range, and exists solely for use internally
 			value = Decimal.fromValue(value);
 			return parseInt(value.exponent.toString()) + Math.log10(value.mantissa);
@@ -1069,7 +1069,7 @@
 		pow(value) {
 			//sacrificing massive amounts of precision lol
 			if (this.e.cmp(1e15) == 1 || value*this.log10small() == Number.POSITIVE_INFINITY) {
-				if (value instanceof BigIntegerInternal) return Decimal.fromMantissaExponent(1,this.log10().multiply(value.multiply(1e10).add(5e9)).divide(1e10));
+				if (value instanceof BigIntegerInternal) return Decimal.fromMantissaExponent(1,this.log10().multiply(value.multiply(2).add(1)).divide(2)); //could round (*2+1/2)
 				value = Decimal.fromValue(value)
 				return Decimal.fromMantissaExponent(1,this.log10().multiply(value.times(1e10).round()).divide(1e10));
 			}
