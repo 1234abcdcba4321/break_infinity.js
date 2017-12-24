@@ -1014,7 +1014,7 @@
 		log(base) {
 			//UN-SAFETY: Most incremental game cases are log(number := 1 or greater, base := 2 or greater). We assume this to be true and thus only need to return a number, not a Decimal, and don't do any other kind of error checking.
 
-			return this.log10().multiply((Math.LN10/Math.log(base)*1e10).round()).divide(10000000000);
+			return this.log10().multiply(Math.round(Math.LN10/Math.log(base)*1e10)).divide(10000000000);
 		}
 		
 		static log(value, base) {
@@ -1024,7 +1024,7 @@
 		}
 		
 		log2() {		
-			return this.log10().multiply(332192809488736).divide(1000000000000000);
+			return this.log10().multiply(332192809488736).add(5e14).divide(1000000000000000);
 		}
 		
 		static log2(value) {
@@ -1034,7 +1034,7 @@
 		}
 		
 		ln() {
-            return this.log10().multiply(230258509299404).divide(1000000000000000);
+            return this.log10().multiply(230258509299404).add(5e14).divide(1000000000000000);
 		}
 		
 		static ln(value) {
@@ -1059,22 +1059,13 @@
 			return parseInt(value.exponent.toString()) + Math.log10(value.mantissa);
 		}
 		
-		static pow10(value) {
-			if (Number.isInteger(value))
-			{
-				return Decimal.fromMantissaExponent_noNormalize(1,value);
-			}
-			return Decimal.fromMantissaExponent(Math.pow(10,value%1),Math.trunc(value));
-		}	
 		pow(value) {
 			//sacrificing massive amounts of precision lol
-			if (this.e.cmp(1e15) == 1 || value*this.log10small() == Number.POSITIVE_INFINITY) {
-				if (value instanceof BigIntegerInternal) return Decimal.fromMantissaExponent(1,this.log10().multiply(value.multiply(2).add(1)).divide(2)); //could round (*2+1/2)
+			//if (this.e.compareTo(5e15) == 1 || this.e.compareTo(-5e15) == -1) {
+				if (value instanceof BigIntegerInternal) return Decimal.fromMantissaExponent_noNormalize(1,this.log10().multiply(value.multiply(2).add(1)).divide(2));
 				value = Decimal.fromValue(value)
-				return Decimal.fromMantissaExponent(1,this.log10().multiply(value.times(1e10).round()).divide(1e10));
-			}
-			value = Decimal.fromValue(value)
-			return Decimal.pow10(value*this.log10small())
+				return Decimal.fromMantissaExponent_noNormalize(1,this.log10().multiply(value.times(1e10).round()).divide(1e10));
+			//}
 			
 		}
 		
