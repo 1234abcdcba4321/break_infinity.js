@@ -203,55 +203,34 @@ var padEnd = function (string, maxLength, fillString) {
 
 		static trunc(value) { return BigDecimal.new(value).trunc(); }
 		
-		op(value,level) {
-            //x+y is level 1, x*y level 2, x^y level 3
+		convertTo(v) {
+			let t = this.t
+			let p = this.p
 			
-			value = BigDecimal.new(value)
-			
-			if (this.mantissa == 0) { return value; }
-			if (value.mantissa == 0) { return this; }
-			
-			var biggerDecimal, smallerDecimal;
-			if (this.exponent >= value.exponent)
-			{
-				biggerDecimal = this;
-				smallerDecimal = value;
+			while (p-- > v) {
+				if (t < 0) return [p-v,t]
+				t = Math.log10(t);
 			}
-			else
-			{
-				biggerDecimal = value;
-				smallerDecimal = this;
+			while (p++ < v) {
+				if (t >= Math.log10(Number.MAX_VALUE)) return [p-v,t]
+				t = 10**t;
 			}
 			
-			if (biggerDecimal.exponent - smallerDecimal.exponent > MAX_SIGNIFICANT_DIGITS)
-			{
-				return biggerDecimal;
-			}
-			else
-			{
-				//have to do this because adding numbers that were once integers but scaled down is imprecise.
-				//Example: 299 + 18
-				return Decimal.fromMantissaExponent(
-				Math.round(1e14*biggerDecimal.mantissa + 1e14*smallerDecimal.mantissa*powersof10[(smallerDecimal.exponent-biggerDecimal.exponent)+indexof0inpowersof10]),
-				biggerDecimal.exponent-14);
-			}
+			return [0,t];
 		}
-		
-		static add(value, other) {
-			value = Decimal.fromValue(value);
+		opUp(level,value) {
+            //presumably this can be improved, but idk how difficult it would be
 			
-			return value.add(other);
-		}
-		
-		plus(value) {
-			return this.add(value);
-		}
-		
-		static plus(value, other) {
-			value = Decimal.fromValue(value);
+			let a = this.convertTo(level)
+			let b = BigDecimal.new(value).convertTo(level)
 			
-			return value.add(other);
+			if (a[0] == 0 && b[0] == 0 && Number.isFinite(a[1]+b[1])) return BigDecimal.fromMulti(level,a[1]+b[1]);
+			return this.max(value)		
 		}
+		add(value) { return this.opUp(0,value) }
+		static add(value, other) { return BigDecimal.new(value).add(other); }
+		plus(value) { return this.add(value); }
+		static plus(value, other) { return BigDecimal.new(value).add(other); }
 		
 		sub(value) {
 			value = Decimal.fromValue(value);
